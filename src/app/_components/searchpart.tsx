@@ -1,50 +1,45 @@
-"use client"
-import { useState } from "react";
+"use client";
 import { Button } from "~/components/ui/button";
+import { useState } from "react";
 
-export default function SearchPart() {
-  const [searchValue, setSearchValue] = useState("");
-  const [isUrl, setIsUrl] = useState(false);
+export async function handleSubmission(formData: string): Promise<void> {
+  const trimmedInput = formData.trimStart();
+  const isValid = isValidUrl(trimmedInput);
 
-  const urlOrNormalSearch = (input: string) => {
-    const trimmedInput = input.trimStart();
-    let tempWord = "";
-    for (const word of trimmedInput) {
-      tempWord += word;
-      if (word === " ") {
-        setIsUrl(false);
-        return;
-      } else if (
-        tempWord === "http://www." ||
-        tempWord === "https://www." ||
-        tempWord === "www."
-      ) {
-        setIsUrl(true);
-        return;
-      }
+  if (!isValid.isIt) {
+    window.location.href = `https://www.google.com/search?q=${trimmedInput}`;
+  } else {
+    if (isValid.returnString) {
+      window.location.href = isValid.returnString;
+    } else {
+      // Handle the case where returnString is undefined
+      // For example, you could throw an error or redirect to a default page
+      throw new Error("Invalid URL");
     }
-  };
+  }
+}
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+function isValidUrl(url: string): { isIt: boolean, returnString: string } {
+  const urlRegex = /^(http|https|ftp|file):\/\/[^\s]+$/;
+  const wwwRegex = /^www\.[^\s]+$/;
+
+  if (urlRegex.test(url)) {
+    return { isIt: true, returnString: url };
+  } else if (wwwRegex.test(url)) {
+    return { isIt: true, returnString: `http://${url}` };
+  } else {
+    return { isIt: false, returnString: '' };
+  }
+}
+
+
+export default function SearchPage() {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    urlOrNormalSearch(searchValue);
-    if (isUrl) {
-      search(true);
-    } else {
-      search(false);
-    }
+    await handleSubmission(ourInput);
   };
 
-  const search = (isUrl: boolean) => {
-    if (isUrl) {
-      console.log({isUrl, searchValue})
-      const url = `https://${searchValue}`;
-      window.location.href = url;
-    } else {
-      const url = `https://www.google.com/search?q=${searchValue}`;
-      window.location.href = url;
-    }
-  };
+  const [ourInput, setOurInput] = useState("");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
@@ -57,18 +52,18 @@ export default function SearchPart() {
             <form
               className="flex w-full items-center"
               onSubmit={handleSubmit}
+              name="search-form"
             >
               <input
-                onChange={(e) => {
-                  setSearchValue(e.target.value);
-                }}
                 type="text"
+                name="search"
+                onChange={(e) => setOurInput(e.target.value)}
                 placeholder="Search for anything..."
                 className="w-full rounded-md border border-gray-300 p-3 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <Button
                 type="submit"
-                variant={"outline"}
+                variant="outline"
                 className="m-2 rounded-r-md border border-gray-300 p-5 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Search
