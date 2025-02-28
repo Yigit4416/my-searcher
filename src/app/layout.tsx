@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { ThemeProvider } from "~/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import TopNav from "./_components/topnav";
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({
             <div className="grid h-full grid-rows-[auto,1fr]">
               <TopNav />
               <main className="">{children}</main>
+              <SpeedInsights />
             </div>
           </ThemeProvider>
         </body>

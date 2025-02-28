@@ -5,9 +5,9 @@
 - [x] make scaffold ui
 - [x] find difference between url and normal search
 - [x] make regex for search
-- [ ] fix search functionality
-- [ ] make db and attach with ui
+- [x] fix search functionality
 - [ ] make bangs
+- [ ] make db and attach with ui
 - [ ] use gemini api for search intellisense
 - [ ] integrate intellisense to ui
 - [ ] allow for custom bangs (will attach to db)
