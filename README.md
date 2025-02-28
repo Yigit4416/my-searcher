@@ -3,8 +3,9 @@
 - [x] deploy
 - [x] auth
 - [x] make scaffold ui
-- [ ] find difference between url and normal search
-- [ ] make regex for search
+- [x] find difference between url and normal search
+- [x] make regex for search
+- [ ] fix search functionality
 - [ ] make db and attach with ui
 - [ ] make bangs
 - [ ] use gemini api for search intellisense
