@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { ThemeProvider } from "~/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import TopNav from "./_components/topnav";
 
 export const metadata: Metadata = {
@@ -20,7 +20,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
-          <SpeedInsights />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -29,7 +28,10 @@ export default function RootLayout({
           >
             <div className="grid h-full grid-rows-[auto,1fr]">
               <TopNav />
-              <main className="">{children}</main>
+              <main className="">
+                {children}
+                <SpeedInsights />
+              </main>
             </div>
           </ThemeProvider>
         </body>
