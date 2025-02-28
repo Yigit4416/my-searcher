@@ -20,6 +20,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
+          <SpeedInsights />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -29,7 +30,6 @@ export default function RootLayout({
             <div className="grid h-full grid-rows-[auto,1fr]">
               <TopNav />
               <main className="">{children}</main>
-              <SpeedInsights />
             </div>
           </ThemeProvider>
         </body>
