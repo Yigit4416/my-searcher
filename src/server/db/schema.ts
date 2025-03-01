@@ -18,19 +18,22 @@ import {
  */
 export const createTable = pgTableCreator((name) => `my-searcher_${name}`);
 
-export const posts = createTable(
-  "post",
+export const bangs = createTable(
+  "bangs",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
+    bang: varchar("bang", { length: 16 }),
+    banglink: varchar("banglink", { length: 2048 }),
+    creator: varchar("creator", { length: 256 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
+      () => new Date(),
     ),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );

@@ -1,25 +1,52 @@
 "use client";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
+import axios from "axios";
+
+function extractBang(inputStr: string): string[] {
+  const words = inputStr.split(" ");
+  const bangs = words.filter((word) => word.startsWith("!"));
+  return bangs;
+}
+
+async function getBangLink(bang: string) {
+  try {
+    const response = await axios.get("/api/dbreq", {
+      params: { bang: bang },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching bang link:", error);
+    throw error;
+  }
+}
 
 export async function handleSubmission(formData: string): Promise<void> {
   const trimmedInput = formData.trimStart();
   const isValid = isValidUrl(trimmedInput);
+  let link = "";
 
   if (!isValid.isIt) {
-    window.location.href = `https://www.google.com/search?q=${trimmedInput}`;
+    const bang = extractBang(trimmedInput);
+    if (bang.length > 0) {
+      if (bang[0]) {
+        const response = await getBangLink(bang[0]);
+        const data = response.data as { banglink: string };
+        link = data.banglink;
+        console.log(link);
+      }
+    }
+    window.location.href = `${link}${trimmedInput}`;
   } else {
     if (isValid.returnString) {
       window.location.href = isValid.returnString;
     } else {
-      // Handle the case where returnString is undefined
-      // For example, you could throw an error or redirect to a default page
       throw new Error("Invalid URL");
     }
   }
 }
 
-function isValidUrl(url: string): { isIt: boolean, returnString: string } {
+function isValidUrl(url: string): { isIt: boolean; returnString: string } {
   const urlRegex = /^(http|https|ftp|file):\/\/[^\s]+$/;
   const wwwRegex = /^www\.[^\s]+$/;
 
@@ -28,10 +55,9 @@ function isValidUrl(url: string): { isIt: boolean, returnString: string } {
   } else if (wwwRegex.test(url)) {
     return { isIt: true, returnString: `http://${url}` };
   } else {
-    return { isIt: false, returnString: '' };
+    return { isIt: false, returnString: "" };
   }
 }
-
 
 export default function SearchPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
