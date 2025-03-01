@@ -35,6 +35,10 @@ export async function handleSubmission(formData: string): Promise<void> {
         link = data.banglink;
         console.log(link);
       }
+    } else {
+      const response = await getBangLink("!duck");
+      const data = response.data as { banglink: string };
+      link = data.banglink;
     }
     window.location.href = `${link}${trimmedInput}`;
   } else {
