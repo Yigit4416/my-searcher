@@ -14,11 +14,17 @@ interface BangResponse {
 
 async function getBangLink(bang: string) {
   try {
+    console.log('Fetching bang link for:', bang);
     const response = await fetch(`/api/dbreq?bang=${bang}`);
+    console.log('Response status:', response.status);
+    
     if (!response.ok) {
+      console.error('Response not OK:', response.statusText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
     const data = await response.json() as BangResponse;
+    console.log('Received data:', data);
     return { data };
   } catch (error) {
     console.error("Error fetching bang link:", error);
