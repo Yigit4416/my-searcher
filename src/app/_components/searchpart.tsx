@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
-import axios from "axios";
 
 function extractBang(inputStr: string): string[] {
   const words = inputStr.split(" ");
@@ -9,12 +8,18 @@ function extractBang(inputStr: string): string[] {
   return bangs;
 }
 
+interface BangResponse {
+  banglink: string;
+}
+
 async function getBangLink(bang: string) {
   try {
-    const response = await axios.get("/api/dbreq", {
-      params: { bang: bang },
-    });
-    return response;
+    const response = await fetch(`/api/dbreq?bang=${bang}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json() as BangResponse;
+    return { data };
   } catch (error) {
     console.error("Error fetching bang link:", error);
     throw error;
