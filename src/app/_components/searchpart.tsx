@@ -83,11 +83,14 @@ function deleteBang({ entry, bang }: { entry: string; bang: string[] }) {
 
 export default function SearchPage() {
   const [ourInput, setOurInput] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setOurInput("");
+    setLoading(true)
     await handleSubmission(ourInput);
+    setLoading(false);
   };
 
   return (
@@ -106,12 +109,14 @@ export default function SearchPage() {
               <input
                 type="text"
                 name="search"
+                disabled = {loading}
                 onChange={(e) => setOurInput(e.target.value)}
                 placeholder="Search for anything..."
                 className="w-full rounded-md border border-gray-300 p-3 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <Button
                 type="submit"
+                disabled={loading}
                 variant="outline"
                 className="m-2 rounded-r-md border border-gray-300 p-5 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
