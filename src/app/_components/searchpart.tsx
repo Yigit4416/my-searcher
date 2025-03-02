@@ -14,17 +14,17 @@ interface BangResponse {
 
 async function getBangLink(bang: string) {
   try {
-    console.log('Fetching bang link for:', bang);
+    console.log("Fetching bang link for:", bang);
     const response = await fetch(`/api/dbreq?bang=${bang}`);
-    console.log('Response status:', response.status);
-    
+    console.log("Response status:", response.status);
+
     if (!response.ok) {
-      console.error('Response not OK:', response.statusText);
+      console.error("Response not OK:", response.statusText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
-    const data = await response.json() as BangResponse;
-    console.log('Received data:', data);
+
+    const data = (await response.json()) as BangResponse;
+    console.log("Received data:", data);
     return { data };
   } catch (error) {
     console.error("Error fetching bang link:", error);
@@ -33,7 +33,7 @@ async function getBangLink(bang: string) {
 }
 
 export async function handleSubmission(formData: string): Promise<void> {
-  const trimmedInput = formData.trimStart();
+  let trimmedInput = formData.trimStart();
   const isValid = isValidUrl(trimmedInput);
   let link = "";
 
@@ -51,6 +51,7 @@ export async function handleSubmission(formData: string): Promise<void> {
       const data = response.data as { banglink: string };
       link = data.banglink;
     }
+    trimmedInput = deleteBang({ entry: trimmedInput, bang: bang });
     window.location.href = `${link}${trimmedInput}`;
   } else {
     if (isValid.returnString) {
@@ -74,13 +75,20 @@ function isValidUrl(url: string): { isIt: boolean; returnString: string } {
   }
 }
 
+function deleteBang({ entry, bang }: { entry: string; bang: string[] }) {
+  if (bang[0] === undefined) return entry;
+  const bangLenght = bang[0].length;
+  return entry.slice(bangLenght + 1);
+}
+
 export default function SearchPage() {
+  const [ourInput, setOurInput] = useState("");
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setOurInput("");
     await handleSubmission(ourInput);
   };
-
-  const [ourInput, setOurInput] = useState("");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
