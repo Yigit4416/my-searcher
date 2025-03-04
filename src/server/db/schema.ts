@@ -18,14 +18,28 @@ import {
  */
 export const createTable = pgTableCreator((name) => `my-searcher_${name}`);
 
-export const bangs = createTable(
-  "bangs",
+export const bangs = createTable("bangs", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  name: varchar("name", { length: 256 }),
+  bang: varchar("bang", { length: 16 }),
+  banglink: varchar("banglink", { length: 2048 }),
+  creator: varchar("creator", { length: 256 }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+});
+
+export const customBangs = createTable(
+  "customBangs",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
     bang: varchar("bang", { length: 16 }),
     banglink: varchar("banglink", { length: 2048 }),
-    creator: varchar("creator", { length: 256 }),
+    creator: integer("creator"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -33,7 +47,11 @@ export const bangs = createTable(
       () => new Date(),
     ),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  }),
+  (table) => {
+    return {
+      creatorIdx: index("creator_idx").on(table.creator),
+      bangIdx: index("bang_idx").on(table.bang),
+      bangLinkIdx: index("bang_link_idx").on(table.banglink),
+    };
+  },
 );
