@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "~/components/ui/button";
 import { useState, useEffect } from "react";
-import { getMockSuggestions } from "~/utils/mockData";
-import axios from "axios";
 
 function extractBang(inputStr: string): string[] {
   const words = inputStr.split(" ");
@@ -12,6 +10,10 @@ function extractBang(inputStr: string): string[] {
 
 interface BangResponse {
   banglink: string;
+}
+
+interface GetUserChoice {
+  getUserChoice: string;
 }
 
 async function getBangLink(bang: string) {
@@ -34,7 +36,10 @@ async function getBangLink(bang: string) {
   }
 }
 
-export async function handleSubmission(formData: string): Promise<void> {
+export async function handleSubmission(
+  formData: string,
+  userBang: string,
+): Promise<void> {
   let trimmedInput = formData.trimStart();
   const isValid = isValidUrl(trimmedInput);
   let link = "";
@@ -49,7 +54,7 @@ export async function handleSubmission(formData: string): Promise<void> {
         console.log(link);
       }
     } else {
-      const response = await getBangLink("!duck");
+      const response = await getBangLink(userBang);
       const data = response.data as { banglink: string };
       link = data.banglink;
     }
@@ -83,11 +88,13 @@ function deleteBang({ entry, bang }: { entry: string; bang: string[] }) {
   return entry.slice(bangLenght + 1);
 }
 
-export default function SearchPage() {
+export default function SearchPage({ getUserChoice }: GetUserChoice) {
   const [ourInput, setOurInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+
+  const userBang = getUserChoice;
 
   const handleSuggestions = async () => {
     if (ourInput.length > 0) {
@@ -121,9 +128,10 @@ export default function SearchPage() {
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       handleSuggestions().catch((error) => console.error(error));
-    }, 300);
+    }, 200);
 
     return () => clearTimeout(debounceTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ourInput]);
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -135,17 +143,16 @@ export default function SearchPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await handleSubmission(ourInput);
+      await handleSubmission(ourInput, userBang);
     } catch (error) {
       console.error("Submission error:", error);
     } finally {
-      setLoading(false);
       setOurInput("");
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4 text-gray-100">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <div className="mb-6 text-center">
         <h1 className="text-4xl font-bold text-gray-100 sm:text-6xl">
           Ojrd Search

@@ -39,7 +39,7 @@ export const customBangs = createTable(
     name: varchar("name", { length: 256 }),
     bang: varchar("bang", { length: 16 }),
     banglink: varchar("banglink", { length: 2048 }),
-    creator: integer("creator"),
+    creator: varchar("creator"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -52,6 +52,19 @@ export const customBangs = createTable(
       creatorIdx: index("creator_idx").on(table.creator),
       bangIdx: index("bang_idx").on(table.bang),
       bangLinkIdx: index("bang_link_idx").on(table.banglink),
+    };
+  },
+);
+
+export const userChoice = createTable(
+  "userChoice",
+  {
+    userId: varchar("userId").primaryKey(),
+    searchEngine: varchar("searchEngine", { length: 64 }),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userIdIdx").on(table.userId),
     };
   },
 );
