@@ -2,6 +2,7 @@
 
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
+import { toast, Toaster } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
   Command,
@@ -46,6 +47,7 @@ export default function SettingsForm({
     <form
       action={async () => {
         await updateUserChoice(value);
+        toast.success("Changes applied");
       }}
     >
       <div className="flex flex-col">
@@ -101,6 +103,7 @@ export default function SettingsForm({
           <Button type="submit">Apply</Button>
         </div>
       </div>
+      <Toaster richColors />
     </form>
   );
 }
