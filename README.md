@@ -15,7 +15,13 @@
 - [x] when trying to go settings to main page it will try to go "/" than "/settings" again. searcPage.tsx has const userBang = getUserChoice(); problem probably caused by await. Take a look at it.
 - [x] make settings tab
 - [x] make sure that user choice will used in search part
-- [ ] when user change a setting give them a notification
+- [x] when user change a setting give them a notification
+- [x] allow for custom bangs (will attach to db)
+- [x] in these custom bangs make sure that add button on left top of the screen and make it green when someon press this it will be shadcn Dialog menu
+- [x] get addbang file to data-table
+- [ ] make delete button for custom bangs
+- [ ] make sure that there won't be conflicting bangs.
+- [ ] get custom bangs functional
 - [ ] make custom analytics
 - [ ] YOU NEED RATE LIMITER you have 10 RPM and 1500 req/day put a reate limiter for 24h 1500req
-- [ ] allow for custom bangs (will attach to db)
+- [ ] solve hdration problem

@@ -128,7 +128,7 @@ export default function SearchPage({ getUserChoice }: GetUserChoice) {
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       handleSuggestions().catch((error) => console.error(error));
-    }, 200);
+    }, 50);
 
     return () => clearTimeout(debounceTimer);
     // eslint-disable-next-line react-hooks/exhaustive-deps

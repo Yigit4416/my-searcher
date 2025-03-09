@@ -15,6 +15,7 @@ import {
 import { Popover, PopoverTrigger } from "~/components/ui/popover";
 import { PopoverContent } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
+import AddBang from "./addbang";
 
 interface UserChoice {
   searchEngine: string;

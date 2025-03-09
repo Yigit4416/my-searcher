@@ -36,10 +36,10 @@ export const customBangs = createTable(
   "customBangs",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    bang: varchar("bang", { length: 16 }),
-    banglink: varchar("banglink", { length: 2048 }),
-    creator: varchar("creator"),
+    name: varchar("name", { length: 256 }).notNull(),
+    bang: varchar("bang", { length: 16 }).notNull(),
+    banglink: varchar("banglink", { length: 2048 }).notNull(),
+    creator: varchar("creator").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

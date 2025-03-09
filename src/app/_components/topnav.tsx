@@ -48,7 +48,16 @@ export default function TopNav() {
           <SignUpButton />
         </SignedOut>
         <SignedIn>
-          <button onClick={() => router.push("/settings")}>
+          <button
+            onClick={() => router.push("/bangs")}
+            className="rounded-md border border-gray-300 px-4 py-2 font-normal transition-all hover:border-gray-500 hover:bg-slate-600"
+          >
+            Your Bangs
+          </button>
+          <button
+            onClick={() => router.push("/settings")}
+            className="rounded-md border border-gray-300 p-2 transition-all hover:border-gray-500 hover:bg-slate-600"
+          >
             <SettingsSVG />
           </button>
           <UserButton />
