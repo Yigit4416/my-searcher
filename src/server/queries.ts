@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { customBangs, userChoice } from "./db/schema";
 import { auth } from "@clerk/nextjs/server";
 
@@ -126,6 +126,20 @@ export async function addCustomBang({ name, bang, banglink }: CustomBangs) {
       bang: customBangs.bang,
       banglink: customBangs.banglink,
     });
+
+  return result;
+}
+
+export async function deleteBang(bangId: number) {
+  const user = await auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  const result = await db
+    .delete(customBangs)
+    .where(
+      and(eq(customBangs.creator, user.userId), eq(customBangs.id, bangId)),
+    )
+    .returning({ id: customBangs.id });
 
   return result;
 }

@@ -1,4 +1,4 @@
-import { getCustomBangs, addCustomBang } from "~/server/queries";
+import { getCustomBangs, addCustomBang, deleteBang } from "~/server/queries";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { type RealBangTypes, columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -31,13 +31,25 @@ export default async function Bangs() {
     return result;
   }
 
+  async function deleteButton(bangId: number) {
+    "use server";
+    if (!bangId) throw new Error("bangId missing");
+
+    await deleteBang(bangId);
+  }
+
   const getData = await getCustomBangList();
 
   return (
     <>
       <SignedIn>
         <div className="mt-16 flex flex-col items-center justify-center space-y-6 pt-6">
-          <DataTable columns={columns} data={getData} addBangs={addBang} />
+          <DataTable
+            columns={columns}
+            data={getData}
+            addBangs={addBang}
+            deleteButton={deleteButton}
+          />
         </div>
       </SignedIn>
       <SignedOut>

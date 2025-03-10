@@ -72,12 +72,14 @@ interface DataTableProps<TData, TValue> {
   }: CustomBangs) => Promise<
     { name: string; bang: string; banglink: string }[]
   >;
+  deleteButton: (id: number) => Promise<void>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   addBangs,
+  deleteButton,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
@@ -87,6 +89,11 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
     state: {
       rowSelection,
+    },
+    // The meta property in table.options.meta is a way to pass additional contextual data or utility functions to the table. In this case, it is being used to provide the deleteButton function, which allows rows in the table to be deleted.
+    // You can pass any object to options.meta and access it anywhere the table is available via table.options.meta.
+    meta: {
+      deleteButton,
     },
   });
 
