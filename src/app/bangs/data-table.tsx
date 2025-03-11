@@ -73,6 +73,7 @@ interface DataTableProps<TData, TValue> {
     { name: string; bang: string; banglink: string }[]
   >;
   deleteButton: (id: number) => Promise<void>;
+  getDefaultBangs: (reqBang: string) => Promise<boolean>;
 }
 
 export function DataTable<TData, TValue>({
@@ -80,6 +81,7 @@ export function DataTable<TData, TValue>({
   data,
   addBangs,
   deleteButton,
+  getDefaultBangs,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
@@ -126,10 +128,12 @@ export function DataTable<TData, TValue>({
                 const bang = formData.get("bang") as string;
                 const banglink = formData.get("banglink") as string;
 
+                const realBang = turnBang(bang);
+                const haveSameBang = await getDefaultBangs(realBang);
+
                 const isURL = isValidUrl(banglink);
-                if (isURL.isIt) {
+                if (isURL.isIt && haveSameBang) {
                   try {
-                    const realBang = turnBang(bang);
                     await addBangs({
                       name,
                       bang: realBang,
@@ -142,7 +146,11 @@ export function DataTable<TData, TValue>({
                   }
                   router.refresh();
                 } else {
-                  toast.error("This is not a valid URL.");
+                  if (haveSameBang === false) {
+                    toast.error("We already have that bang");
+                  } else {
+                    toast.error("This is not a valid URL.");
+                  }
                 }
               }}
             >
@@ -191,9 +199,6 @@ export function DataTable<TData, TValue>({
               </div>
 
               <DialogFooter className="mt-6">
-                <Button type="button" variant="outline" className="mr-2">
-                  Cancel
-                </Button>
                 <Button type="submit" className="px-4">
                   Save Bang
                 </Button>

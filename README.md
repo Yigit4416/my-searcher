@@ -20,8 +20,7 @@
 - [x] in these custom bangs make sure that add button on left top of the screen and make it green when someon press this it will be shadcn Dialog menu
 - [x] get addbang file to data-table
 - [x] make delete button for custom bangs (DON'T FORGET IT WILL BE IN columns.tsx)
-- [ ] when someone adds a new bang don't refresh page just push to list you already have useState.
-- [ ] make sure that there won't be conflicting bangs.
+- [x] make sure that there won't be conflicting bangs.
 - [ ] get custom bangs functional
 - [ ] make custom analytics
 - [ ] YOU NEED RATE LIMITER you have 10 RPM and 1500 req/day put a reate limiter for 24h 1500req

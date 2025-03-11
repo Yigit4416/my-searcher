@@ -11,6 +11,20 @@ export async function getBang(bang: string) {
   return reqBang;
 }
 
+export async function getAllBangs() {
+  const allBangs = await db.query.bangs.findMany({
+    columns: {
+      bang: true,
+    },
+  });
+
+  const updatedBangs = allBangs.map((bangObj) => ({
+    bang: bangObj.bang ?? "!g",
+  }));
+
+  return updatedBangs;
+}
+
 export async function addBang(
   bang: string,
   bangLink: string,

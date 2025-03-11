@@ -1,4 +1,9 @@
-import { getCustomBangs, addCustomBang, deleteBang } from "~/server/queries";
+import {
+  getCustomBangs,
+  addCustomBang,
+  deleteBang,
+  getAllBangs,
+} from "~/server/queries";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { type RealBangTypes, columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -12,6 +17,21 @@ interface CustomBangs {
 async function getCustomBangList(): Promise<RealBangTypes> {
   const result = await getCustomBangs();
   return result;
+}
+
+async function getAllDefaultBangs(reqBang: string) {
+  "use server";
+  const result = await getAllBangs();
+  const haveBang = result.findIndex((bang) => bang.bang === reqBang);
+  const customResult = await getCustomBangList();
+  const haveCustomBang = customResult.findIndex(
+    (bang) => bang.bang === reqBang,
+  );
+  if (haveBang === -1 && haveCustomBang === -1) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Send addCustomBang and allCustomBangs to lower level
@@ -49,6 +69,7 @@ export default async function Bangs() {
             data={getData}
             addBangs={addBang}
             deleteButton={deleteButton}
+            getDefaultBangs={getAllDefaultBangs}
           />
         </div>
       </SignedIn>
