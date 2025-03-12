@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "~/components/ui/button";
 import { useState, useEffect } from "react";
+import { Toaster } from "~/components/ui/sonner";
+import { toast } from "sonner";
 
 function extractBang(inputStr: string): string[] {
   const words = inputStr.split(" ");
@@ -23,8 +25,7 @@ async function getBangLink(bang: string) {
     console.log("Response status:", response.status);
 
     if (!response.ok) {
-      console.error("Response not OK:", response.statusText);
-      throw new Error(`HTTP error! status: ${response.status}`);
+      toast.error("Couldn't find bang");
     }
 
     const data = (await response.json()) as BangResponse;
@@ -148,6 +149,7 @@ export default function SearchPage({ getUserChoice }: GetUserChoice) {
       console.error("Submission error:", error);
     } finally {
       setOurInput("");
+      setLoading(false);
     }
   };
 
@@ -201,6 +203,7 @@ export default function SearchPage({ getUserChoice }: GetUserChoice) {
           </div>
         </div>
       </div>
+      <Toaster richColors />
     </div>
   );
 }

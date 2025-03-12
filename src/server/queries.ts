@@ -8,6 +8,10 @@ export async function getBang(bang: string) {
   const reqBang = await db.query.bangs.findFirst({
     where: (model, { eq }) => eq(model.bang, bang),
   });
+  if (!reqBang) {
+    const customBang = await getCustomBang(bang);
+    return customBang;
+  }
   return reqBang;
 }
 

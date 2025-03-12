@@ -21,7 +21,7 @@
 - [x] get addbang file to data-table
 - [x] make delete button for custom bangs (DON'T FORGET IT WILL BE IN columns.tsx)
 - [x] make sure that there won't be conflicting bangs.
-- [ ] get custom bangs functional
-- [ ] make custom analytics
+- [x] get custom bangs functional
+- [ ] make better system instructions
 - [ ] YOU NEED RATE LIMITER you have 10 RPM and 1500 req/day put a reate limiter for 24h 1500req
 - [ ] solve hdration problem
